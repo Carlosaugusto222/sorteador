@@ -9,151 +9,83 @@
       font-family: Arial, sans-serif;
       text-align: center;
       background-color: #3bd128;
+      margin: 0;
+      padding: 0;
     }
-
     .container {
-      max-width: 700px;
-      margin: auto;
       padding: 20px;
     }
 
-    .inputs {
-      margin: 10px 0;
-    }
-
-    input {
-      padding: 10px;
-      width: 120px;
-      margin: 5px;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin-top: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .nuvem-container {
+    .carrossel-container {
       position: relative;
-      width: 100%;
-      height: 220px;
-      background: #fff;
-      border: 3px solid #ccc;
-      border-radius: 20px;
-      margin: 30px 0;
+      width: 80%;
+      height: 100px;
+      margin: 20px auto;
       overflow: hidden;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      background-color: #fff;
     }
 
-    .numero-nuvem {
-      position: absolute;
-      font-size: 22px;
+    .carrossel-numeros {
+      display: flex;
+      flex-wrap: nowrap;
+      animation: rolarCarrossel 15s linear infinite;
+    }
+
+    .numero-carrossel {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 2px;
+      font-size: 18px;
+      background-color: #f4f4f4;
+      border-radius: 5px;
+    }
+
+    @keyframes rolarCarrossel {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    .numero-sorteado-na-caixa {
+      font-size: 30px;
+      margin-top: 20px;
       font-weight: bold;
-      color: #444;
-      animation: flutuar 10s linear infinite;
-      opacity: 0.8;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-    }
-
-    @keyframes flutuar {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      100% {
-        transform: translateY(-220px) rotate(360deg);
-      }
-    }
-
-    .explosao {
-      animation: explodir 0.6s ease-out forwards;
-      color: red;
-      opacity: 0;
-    }
-
-    @keyframes explodir {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(2.5) rotate(180deg);
-        opacity: 0.8;
-      }
-      100% {
-        transform: scale(0);
-        opacity: 0;
-      }
     }
 
     .resultado {
-      font-size: 34px;
+      font-size: 24px;
       margin-top: 20px;
     }
 
     .numeros-finais {
+      font-size: 20px;
       margin-top: 10px;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .numero-final {
-      font-size: 28px;
-      background-color: #1bb300;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 10px;
-      animation: aparecer 0.5s ease-in-out;
-    }
-
-    @keyframes aparecer {
-      0% {
-        transform: scale(0.3);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    .numero-sorteado-na-nuvem {
-      position: absolute;
-      font-size: 60px;
-      font-weight: bold;
-      color: green;
-      animation: aparecer 0.8s ease-in-out;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
     }
 
     .historico {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
-      text-align: left;
+      list-style-type: none;
+      padding-left: 0;
     }
 
-    .historico li {
-      margin-bottom: 5px;
-    }
-
-    .creditos {
-      display: block;
-      margin-top: 10px;
-      font-size: 12px;
-      color: #555;
+    .creditos, .copyright {
+      font-size: 14px;
+      color: #fff;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="./assets/logo.JPG" alt="Logo" style="max-width: 150px;">
-    <h1>Cajú Premiado</h1>
-    <h1>Sorteador de Números</h1></h2>
+    <img src="./assets/logo.JPG" alt="Dado" style="width: 150px; vertical-align: middle; animation: girar 2s linear infinite;">
+    <h1 style="display: inline-block; margin-left: 10px;">Cajú Premiado</h1>
+    <h2>Sorteador de Números</h2>
 
     <div class="inputs">
       <input type="number" id="min" placeholder="Mínimo">
@@ -171,7 +103,10 @@
 
     <button onclick="sortearNumeros()">Sortear</button>
 
-    <div class="nuvem-container" id="nuvem"></div>
+    <div class="carrossel-container" id="carrosselContainer">
+      <div class="carrossel-numeros" id="carrossel"></div>
+      <div class="numero-sorteado-na-caixa" id="numeroSorteado"></div>
+    </div>
 
     <div id="resultado" class="resultado">🎯 Aguardando sorteio...</div>
     <div id="numerosFinais" class="numeros-finais"></div>
@@ -183,26 +118,35 @@
     <p class="creditos">Contato: carlosoftwaredev@gmail.com</p>
   </div>
 
+  <div class="copyright">© Cajú Premiado 2025</div>
+
   <script>
     const resultadoDiv = document.getElementById("resultado");
     const historicoUl = document.getElementById("historico");
-    const nuvem = document.getElementById("nuvem");
+    const carrossel = document.getElementById("carrossel");
+    const numeroSorteadoDiv = document.getElementById("numeroSorteado");
     const numerosFinaisDiv = document.getElementById("numerosFinais");
 
     function gerarNumerosAleatorios(qtd, min, max, semRepeticao) {
       const numeros = [];
       const usados = new Set();
       const intervalo = max - min + 1;
-
       while (numeros.length < qtd) {
         const numero = Math.floor(Math.random() * intervalo) + min;
         if (semRepeticao && usados.has(numero)) continue;
-
         numeros.push(numero);
         usados.add(numero);
       }
-
       return numeros;
+    }
+
+    // Função para embaralhar os números
+    function embaralharArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Troca os elementos
+      }
+      return array;
     }
 
     function sortearNumeros() {
@@ -227,67 +171,48 @@
         return;
       }
 
-      resultadoDiv.innerText = "⏳ Sorteando... Aguardando...!";
+      resultadoDiv.innerText = "⏳ Sorteando... Aguarde...";
       numerosFinaisDiv.innerHTML = "";
-      nuvem.innerHTML = "";
+      carrossel.innerHTML = "";
+      numeroSorteadoDiv.innerHTML = "";
 
       const todos = [];
       for (let i = min; i <= max; i++) {
         todos.push(i);
       }
 
-      todos.forEach(num => {
-        const div = document.createElement("div");
-        div.className = "numero-nuvem";
-        div.dataset.valor = num;
-        div.style.left = `${Math.random() * 90}%`;
-        div.style.top = `${Math.random() * 100}%`;
-        div.style.fontSize = `${16 + Math.random() * 20}px`;
-        div.innerText = num;
-        nuvem.appendChild(div);
-      });
+      // Embaralha os números antes de adicioná-los ao carrossel
+      const numerosEmbaralhados = embaralharArray([...todos]);
+
+      for (let i = 0; i < 50; i++) {
+        numerosEmbaralhados.forEach(num => {
+          const span = document.createElement("div");
+          span.className = "numero-carrossel";
+          span.innerText = num;
+          carrossel.appendChild(span);
+        });
+      }
+
+      carrossel.style.animationPlayState = "running";
 
       setTimeout(() => {
         const sorteados = gerarNumerosAleatorios(qtd, min, max, semRepeticao);
         resultadoDiv.innerText = "🎉 Números Sorteados:";
 
         sorteados.forEach(num => {
-          const span = document.createElement("div");
-          span.className = "numero-final";
-          span.textContent = num;
-          numerosFinaisDiv.appendChild(span);
-        });
-
-        const nuvens = document.querySelectorAll(".numero-nuvem");
-        nuvens.forEach(div => {
-          const valor = parseInt(div.dataset.valor);
-          if (!sorteados.includes(valor)) {
-            div.classList.add("explosao");
-          } else {
-            div.style.opacity = "0";
-          }
+          const div = document.createElement("div");
+          div.className = "numero-final";
+          div.textContent = num;
+          numerosFinaisDiv.appendChild(div);
         });
 
         const li = document.createElement("li");
         li.textContent = `→ ${sorteados.join(", ")}`;
         historicoUl.prepend(li);
 
-        // Após explosões, mostrar sorteados grandes na nuvem
-        setTimeout(() => {
-          nuvem.innerHTML = "";
-
-          sorteados.forEach((num, i) => {
-            const grande = document.createElement("div");
-            grande.className = "numero-sorteado-na-nuvem";
-            grande.textContent = num;
-            grande.style.left = `${40 + i * 20}%`;
-            grande.style.top = "50%";
-            nuvem.appendChild(grande);
-          });
-
-        }, 1000); // espera explosões
-
-      }, 10000); // suspense de 10s
+        numeroSorteadoDiv.innerText = sorteados[0];
+        carrossel.style.animationPlayState = "paused";
+      }, 15000);
     }
   </script>
 </body>
