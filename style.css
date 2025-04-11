@@ -1,0 +1,119 @@
+body {
+    background-color: #45b32f;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    padding-top: 30px;
+    margin: 0;
+  }
+  img {
+    height: 150px;
+
+  }
+  
+  .container {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  h1, h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .inputs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  input[type="number"] {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  .checkbox {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .checkbox label {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  
+  .resultado {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #007bff;
+    min-height: 30px;
+  }
+  
+  .historico {
+    margin-top: 15px;
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-left: 20px;
+  }
+  
+  .historico li {
+    font-size: 15px;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  .tabela-numeros {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .numero {
+    font-size: 24px;
+    background-color: #f0c040;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    animation: aparecer 0.3s ease-in-out;
+  }
+  
+  @keyframes aparecer {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  
