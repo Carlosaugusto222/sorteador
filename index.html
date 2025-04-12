@@ -19,18 +19,22 @@
     .carrossel-container {
       position: relative;
       width: 80%;
-      height: 100px;
       margin: 20px auto;
       overflow: hidden;
       border: 2px solid #fff;
       border-radius: 10px;
       background-color: #fff;
+      height: 200px;
     }
 
     .carrossel-numeros {
       display: flex;
-      flex-wrap: nowrap;
-      animation: rolarCarrossel 15s linear infinite;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding-top: 10px;
+      position: absolute;
+      animation: moverNumeros 10s linear infinite; /* Animação de movimento */
     }
 
     .numero-carrossel {
@@ -39,25 +43,46 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 2px;
       font-size: 18px;
       background-color: #f4f4f4;
       border-radius: 5px;
+      animation: pulsar 1s ease-in-out infinite, mover 10s linear infinite; /* Animação de pulsar e movimento */
     }
 
-    @keyframes rolarCarrossel {
+    @keyframes pulsar {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes mover {
       0% {
         transform: translateX(0);
       }
       100% {
-        transform: translateX(-100%);
+        transform: translateX(100vw); /* Movimento horizontal */
       }
     }
 
     .numero-sorteado-na-caixa {
-      font-size: 30px;
+      font-size: 100px;
       margin-top: 20px;
       font-weight: bold;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+      display: inline-block;
+      transform: scale(2);
     }
 
     .resultado {
@@ -79,6 +104,7 @@
       font-size: 14px;
       color: #fff;
     }
+
   </style>
 </head>
 <body>
@@ -181,18 +207,18 @@
         todos.push(i);
       }
 
-      // Embaralha os números antes de adicioná-los ao carrossel
-      const numerosEmbaralhados = embaralharArray([...todos]);
+      // Embaralha os números aleatoriamente
+      embaralharArray(todos);
 
-      for (let i = 0; i < 50; i++) {
-        numerosEmbaralhados.forEach(num => {
-          const span = document.createElement("div");
-          span.className = "numero-carrossel";
-          span.innerText = num;
-          carrossel.appendChild(span);
-        });
-      }
+      // Exibe os números aleatórios se movendo antes de sortear
+      todos.forEach(num => {
+        const span = document.createElement("div");
+        span.className = "numero-carrossel";
+        span.innerText = num;
+        carrossel.appendChild(span);
+      });
 
+      // Inicia a animação de pulsar e mover
       carrossel.style.animationPlayState = "running";
 
       setTimeout(() => {
@@ -211,8 +237,10 @@
         historicoUl.prepend(li);
 
         numeroSorteadoDiv.innerText = sorteados[0];
+
+        // Finaliza a animação e pausa o efeito de pulsar
         carrossel.style.animationPlayState = "paused";
-      }, 15000);
+      }, 10000); // 10 segundos de suspense
     }
   </script>
 </body>
