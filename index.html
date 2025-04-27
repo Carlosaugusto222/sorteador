@@ -34,7 +34,7 @@
       gap: 10px;
       padding-top: 10px;
       position: absolute;
-      animation: moverNumeros 10s linear infinite;
+      animation: moverNumeros 10s linear infinite; /* Animação de movimento */
     }
 
     .numero-carrossel {
@@ -46,18 +46,31 @@
       font-size: 18px;
       background-color: #f4f4f4;
       border-radius: 5px;
-      animation: pulsar 1s ease-in-out infinite, mover 10s linear infinite;
+      animation: pulsar 1s ease-in-out infinite, mover 10s linear infinite; /* Animação de pulsar e movimento */
     }
 
     @keyframes pulsar {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: 0.5; }
-      100% { transform: scale(1); opacity: 1; }
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     @keyframes mover {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(100vw); }
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(100vw); /* Movimento horizontal */
+      }
     }
 
     .numero-sorteado-na-caixa {
@@ -91,6 +104,7 @@
       font-size: 14px;
       color: #fff;
     }
+
   </style>
 </head>
 <body>
@@ -139,43 +153,24 @@
     const numeroSorteadoDiv = document.getElementById("numeroSorteado");
     const numerosFinaisDiv = document.getElementById("numerosFinais");
 
-    let tentativas = 0;
-    let obrigar88 = false;
-    let jaSaiu88 = false;
-
     function gerarNumerosAleatorios(qtd, min, max, semRepeticao) {
       const numeros = [];
       const usados = new Set();
       const intervalo = max - min + 1;
-
-      tentativas++;
-
-      if (!jaSaiu88 && tentativas >= 3) {
-        obrigar88 = true;
-      }
-
       while (numeros.length < qtd) {
-        let numero = Math.floor(Math.random() * intervalo) + min;
-
-        if (obrigar88 && !numeros.includes(88)) {
-          numero = 88;
-          obrigar88 = false;
-          jaSaiu88 = true;
-        }
-
+        const numero = Math.floor(Math.random() * intervalo) + min;
         if (semRepeticao && usados.has(numero)) continue;
-
         numeros.push(numero);
         usados.add(numero);
       }
-
       return numeros;
     }
 
+    // Função para embaralhar os números
     function embaralharArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [array[i], array[j]] = [array[j], array[i]]; // Troca os elementos
       }
       return array;
     }
@@ -212,8 +207,10 @@
         todos.push(i);
       }
 
+      // Embaralha os números aleatoriamente
       embaralharArray(todos);
 
+      // Exibe os números aleatórios se movendo antes de sortear
       todos.forEach(num => {
         const span = document.createElement("div");
         span.className = "numero-carrossel";
@@ -221,6 +218,7 @@
         carrossel.appendChild(span);
       });
 
+      // Inicia a animação de pulsar e mover
       carrossel.style.animationPlayState = "running";
 
       setTimeout(() => {
@@ -240,9 +238,13 @@
 
         numeroSorteadoDiv.innerText = sorteados[0];
 
+        // Finaliza a animação e pausa o efeito de pulsar
         carrossel.style.animationPlayState = "paused";
-      }, 10000);
+      }, 10000); // 10 segundos de suspense
     }
   </script>
 </body>
 </html>
+
+
+
