@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cajú Premiado</title>
   <style>
     body {
@@ -50,21 +50,34 @@
     }
 
     @keyframes pulsar {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.2); opacity: 0.5; }
-      100% { transform: scale(1); opacity: 1; }
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     @keyframes mover {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(100vw); }
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(100vw);
+      }
     }
 
     .numero-sorteado-na-caixa {
       font-size: 100px;
       margin-top: 20px;
       font-weight: bold;
-      background-color: #4CAF50;
+      background-color: #4caf50;
       color: white;
       padding: 10px;
       border-radius: 10px;
@@ -87,7 +100,8 @@
       padding-left: 0;
     }
 
-    .creditos, .copyright {
+    .creditos,
+    .copyright {
       font-size: 14px;
       color: #fff;
     }
@@ -95,21 +109,25 @@
 </head>
 <body>
   <div class="container">
-    <img src="./assets/logo.JPG" alt="Dado" style="width: 150px; vertical-align: middle; animation: girar 2s linear infinite;">
-    <h1 style="display: inline-block; margin-left: 10px;">Cajú Premiado</h1>
+    <img
+      src="./assets/logo.JPG"
+      alt="Dado"
+      style="width: 150px; vertical-align: middle; animation: girar 2s linear infinite"
+    />
+    <h1 style="display: inline-block; margin-left: 10px">Cajú Premiado</h1>
     <h2>Sorteador de Números</h2>
 
     <div class="inputs">
-      <input type="number" id="min" placeholder="Mínimo">
-      <input type="number" id="max" placeholder="Máximo">
+      <input type="number" id="min" placeholder="Mínimo" />
+      <input type="number" id="max" placeholder="Máximo" />
     </div>
     <div class="inputs">
-      <input type="number" id="quantidade" placeholder="Qtd. de Números">
+      <input type="number" id="quantidade" placeholder="Qtd. de Números" />
     </div>
 
     <div class="checkbox">
       <label>
-        <input type="checkbox" id="semRepeticao"> Impedir números repetidos
+        <input type="checkbox" id="semRepeticao" /> Impedir números repetidos
       </label>
     </div>
 
@@ -139,19 +157,22 @@
     const numeroSorteadoDiv = document.getElementById("numeroSorteado");
     const numerosFinaisDiv = document.getElementById("numerosFinais");
 
-    let contadorSorteios = 0;
-    let forca77Usado = false;
+    // Pega o contador e flag do localStorage (ou inicia com 0 e false)
+    let contadorSorteios = parseInt(localStorage.getItem("contadorSorteios")) || 0;
+    let forca77Usado = localStorage.getItem("forca77Usado") === "true";
 
     function gerarNumerosAleatorios(qtd, min, max, semRepeticao) {
       const numeros = [];
       const usados = new Set();
       const intervalo = max - min + 1;
+
       while (numeros.length < qtd) {
         const numero = Math.floor(Math.random() * intervalo) + min;
         if (semRepeticao && usados.has(numero)) continue;
         numeros.push(numero);
         usados.add(numero);
       }
+
       return numeros;
     }
 
@@ -164,8 +185,6 @@
     }
 
     function sortearNumeros() {
-      contadorSorteios++;
-
       const min = parseInt(document.getElementById("min").value);
       const max = parseInt(document.getElementById("max").value);
       const qtd = parseInt(document.getElementById("quantidade").value);
@@ -199,7 +218,7 @@
 
       embaralharArray(todos);
 
-      todos.forEach(num => {
+      todos.forEach((num) => {
         const span = document.createElement("div");
         span.className = "numero-carrossel";
         span.innerText = num;
@@ -209,21 +228,31 @@
       carrossel.style.animationPlayState = "running";
 
       setTimeout(() => {
+        contadorSorteios++;
+        localStorage.setItem("contadorSorteios", contadorSorteios);
+
         let sorteados;
 
-        if (contadorSorteios === 4 && !forca77Usado) {
-          forca77Usado = true;
-          const numeroForcado = 77;
+        if (
+          contadorSorteios === 2 &&
+          !forca77Usado &&
+          min <= 77 &&
+          max >= 77
+        ) {
           sorteados = gerarNumerosAleatorios(qtd - 1, min, max, semRepeticao);
-          sorteados = sorteados.filter(n => n !== numeroForcado);
-          sorteados.splice(1, 0, numeroForcado); // 👉 Insere o 77 na segunda posição
+          if (semRepeticao && sorteados.includes(77)) {
+            sorteados = sorteados.filter((n) => n !== 77);
+          }
+          sorteados.splice(1, 0, 77); // Insere 77 na segunda posição
+          forca77Usado = true;
+          localStorage.setItem("forca77Usado", "true");
         } else {
           sorteados = gerarNumerosAleatorios(qtd, min, max, semRepeticao);
         }
 
         resultadoDiv.innerText = "🎉 Números Sorteados:";
 
-        sorteados.forEach(num => {
+        sorteados.forEach((num) => {
           const div = document.createElement("div");
           div.className = "numero-final";
           div.textContent = num;
@@ -235,7 +264,6 @@
         historicoUl.prepend(li);
 
         numeroSorteadoDiv.innerText = sorteados[0];
-
         carrossel.style.animationPlayState = "paused";
       }, 10000);
     }
