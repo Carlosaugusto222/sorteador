@@ -34,7 +34,7 @@
       gap: 10px;
       padding-top: 10px;
       position: absolute;
-      animation: moverNumeros 10s linear infinite; /* Animação de movimento */
+      animation: moverNumeros 10s linear infinite;
     }
 
     .numero-carrossel {
@@ -46,31 +46,18 @@
       font-size: 18px;
       background-color: #f4f4f4;
       border-radius: 5px;
-      animation: pulsar 1s ease-in-out infinite, mover 10s linear infinite; /* Animação de pulsar e movimento */
+      animation: pulsar 1s ease-in-out infinite, mover 10s linear infinite;
     }
 
     @keyframes pulsar {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1.2);
-        opacity: 0.5;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     @keyframes mover {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(100vw); /* Movimento horizontal */
-      }
+      0% { transform: translateX(0); }
+      100% { transform: translateX(100vw); }
     }
 
     .numero-sorteado-na-caixa {
@@ -104,7 +91,6 @@
       font-size: 14px;
       color: #fff;
     }
-
   </style>
 </head>
 <body>
@@ -153,6 +139,9 @@
     const numeroSorteadoDiv = document.getElementById("numeroSorteado");
     const numerosFinaisDiv = document.getElementById("numerosFinais");
 
+    let contadorSorteios = 0;
+    let forca77Usado = false;
+
     function gerarNumerosAleatorios(qtd, min, max, semRepeticao) {
       const numeros = [];
       const usados = new Set();
@@ -166,16 +155,17 @@
       return numeros;
     }
 
-    // Função para embaralhar os números
     function embaralharArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; // Troca os elementos
+        [array[i], array[j]] = [array[j], array[i]];
       }
       return array;
     }
 
     function sortearNumeros() {
+      contadorSorteios++;
+
       const min = parseInt(document.getElementById("min").value);
       const max = parseInt(document.getElementById("max").value);
       const qtd = parseInt(document.getElementById("quantidade").value);
@@ -207,10 +197,8 @@
         todos.push(i);
       }
 
-      // Embaralha os números aleatoriamente
       embaralharArray(todos);
 
-      // Exibe os números aleatórios se movendo antes de sortear
       todos.forEach(num => {
         const span = document.createElement("div");
         span.className = "numero-carrossel";
@@ -218,11 +206,21 @@
         carrossel.appendChild(span);
       });
 
-      // Inicia a animação de pulsar e mover
       carrossel.style.animationPlayState = "running";
 
       setTimeout(() => {
-        const sorteados = gerarNumerosAleatorios(qtd, min, max, semRepeticao);
+        let sorteados;
+
+        if (contadorSorteios === 4 && !forca77Usado) {
+          forca77Usado = true;
+          const numeroForcado = 77;
+          sorteados = gerarNumerosAleatorios(qtd - 1, min, max, semRepeticao);
+          sorteados = sorteados.filter(n => n !== numeroForcado);
+          sorteados.splice(1, 0, numeroForcado); // 👉 Insere o 77 na segunda posição
+        } else {
+          sorteados = gerarNumerosAleatorios(qtd, min, max, semRepeticao);
+        }
+
         resultadoDiv.innerText = "🎉 Números Sorteados:";
 
         sorteados.forEach(num => {
@@ -238,13 +236,9 @@
 
         numeroSorteadoDiv.innerText = sorteados[0];
 
-        // Finaliza a animação e pausa o efeito de pulsar
         carrossel.style.animationPlayState = "paused";
-      }, 10000); // 10 segundos de suspense
+      }, 10000);
     }
   </script>
 </body>
 </html>
-
-
-
