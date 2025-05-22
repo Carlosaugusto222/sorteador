@@ -157,10 +157,6 @@
     const numeroSorteadoDiv = document.getElementById("numeroSorteado");
     const numerosFinaisDiv = document.getElementById("numerosFinais");
 
-    // Pega o contador e flag do localStorage (ou inicia com 0 e false)
-    let contadorSorteios = parseInt(localStorage.getItem("contadorSorteios")) || 0;
-    let forca77Usado = localStorage.getItem("forca77Usado") === "true";
-
     function gerarNumerosAleatorios(qtd, min, max, semRepeticao) {
       const numeros = [];
       const usados = new Set();
@@ -228,27 +224,7 @@
       carrossel.style.animationPlayState = "running";
 
       setTimeout(() => {
-        contadorSorteios++;
-        localStorage.setItem("contadorSorteios", contadorSorteios);
-
-        let sorteados;
-
-        if (
-          contadorSorteios === 2 &&
-          !forca77Usado &&
-          min <= 77 &&
-          max >= 77
-        ) {
-          sorteados = gerarNumerosAleatorios(qtd - 1, min, max, semRepeticao);
-          if (semRepeticao && sorteados.includes(77)) {
-            sorteados = sorteados.filter((n) => n !== 77);
-          }
-          sorteados.splice(1, 0, 77); // Insere 77 na segunda posição
-          forca77Usado = true;
-          localStorage.setItem("forca77Usado", "true");
-        } else {
-          sorteados = gerarNumerosAleatorios(qtd, min, max, semRepeticao);
-        }
+        const sorteados = gerarNumerosAleatorios(qtd, min, max, semRepeticao);
 
         resultadoDiv.innerText = "🎉 Números Sorteados:";
 
